@@ -119,13 +119,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="christofides.cpp" />
+    <ClCompile Include="tspDriver.cpp" />
     <ClCompile Include="dynArray.cpp" />
     <ClCompile Include="linkedList.cpp" />
+    <ClCompile Include="twoOpt.cpp" />
+    <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="christofides.hpp" />
     <ClInclude Include="dynArray.hpp" />
     <ClInclude Include="linkedList.hpp" />
+    <ClInclude Include="twoOpt.hpp" />
     <ClInclude Include="type.hpp" />
+    <ClInclude Include="utilities.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,7 +21,16 @@
     <ClCompile Include="dynArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tspDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="christofides.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="twoOpt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,6 +42,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dynArray.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="christofides.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="twoOpt.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

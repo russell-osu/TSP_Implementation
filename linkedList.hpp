@@ -1,5 +1,5 @@
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H
+#ifndef LINKED_LIST_HPP
+#define LINKED_LIST_HPP
 
 #ifndef TYPE_2
 #define TYPE_2 int
