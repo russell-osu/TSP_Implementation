@@ -324,7 +324,7 @@ void addHeap(DynArr *heap, TYPE node)
 	int parentIndex;
 	int swappingFinished = 0; //bool for terminating loop
 
-							  //percolate up until node is in the correct position in the heap
+	//percolate up until node is in the correct position in the heap
 	while (nodeIndex != 0 && !swappingFinished)
 	{
 		//find index of parent
@@ -342,6 +342,34 @@ void addHeap(DynArr *heap, TYPE node)
 		}
 	}
 
+}
+
+//given an updated node's position (priority increased only)
+//moves node up heap until correct position discovered
+void percolateUpHeap(DynArr *heap, int pos)
+{
+	//point position to index of newly added element (1 less than size)
+	int nodeIndex = pos;
+	int parentIndex;
+	int swappingFinished = 0; //bool for terminating loop
+
+	//percolate up until node is in the correct position in the heap
+	while (nodeIndex != 0 && !swappingFinished)
+	{
+		//find index of parent
+		parentIndex = (nodeIndex - 1) / 2;
+		//compare new value with parent's value; if less, swap
+		if (compare(getDynArr(heap, nodeIndex), getDynArr(heap, parentIndex)) == -1)
+		{
+			swapDynArr(heap, nodeIndex, parentIndex);
+			//set new val's index equal to parent's index
+			nodeIndex = parentIndex;
+		}
+		else //no more swaps needed
+		{
+			swappingFinished = 1;
+		}
+	}
 }
 
 /*	Adjust heap to maintain heap property

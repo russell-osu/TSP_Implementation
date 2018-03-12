@@ -37,6 +37,6 @@ TYPE getMinHeap(DynArr *heap);
 void addHeap(DynArr *heap, TYPE node);
 void removeMinHeap(DynArr *heap);
 void sortHeap(DynArr *heap);
-void _adjustHeap(DynArr *heap, int max, int pos);
+void percolateUpHeap(DynArr *heap, int pos);
 
 #endif

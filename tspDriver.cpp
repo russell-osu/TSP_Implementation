@@ -126,8 +126,10 @@ int main(){
 
 
 	//run two-opt on ham tour
-	twoOpt(ham, matrix, N);
-
+	for(int i = 0; i < 3; i++)
+	{
+		pseudoTwoOpt(ham, matrix, N);
+	}
 
 	//TEST: print tour length
 	int tourLength = 0;

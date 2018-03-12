@@ -19,10 +19,11 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	int* key = new int[N];
 	//create array for tracking if vertex has been removed from heap
 	int* inHeap = new int[N];
+	//city to serve as root of MST
+	int startCity = 0;
 	//create array for tracking previous city
 	int* prevCity = new int[N];
-	prevCity[0] = -1; //first city has no previous city
-
+	prevCity[startCity] = -1; //first city has no previous city
 
 
 	//add cities and key values to arrays (key set to infinity)
@@ -31,15 +32,25 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	{
 		struct Vect temp;
 		temp.cityNum = city;
-		temp.key = 9999999; //infinity
+		temp.key = 9999999; //infinity 
 		addHeap(vectHeap, temp);
 		key[city] = 9999999;
 		inHeap[city] = 1;
 	}
 
+
 	//first city/vector has key value of 0
-	updateKey(0, 0, vectHeap);
-	key[0] = 0;
+	updateKey(startCity, 0, vectHeap);
+	key[startCity] = 0;
+
+
+	////TESTING MIN HEAP FUNCTIONALITY
+	//for (int i = 0; i < 76; i++)
+	//{
+	//	struct Vect u = getMinHeap(vectHeap);
+	//	removeMinHeap(vectHeap); //remove from heap
+	//	cout << "removed from heap: " << u.cityNum << " key: " << u.key << endl;
+	//}
 
 
 	//build MST
@@ -50,7 +61,7 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 		removeMinHeap(vectHeap); //remove from heap
 		inHeap[u.cityNum] = 0; //remove from in-heap tracking array
 
-							   //search for vertices adjacent to u in matrix
+		//search for vertices adjacent to u in matrix
 		for (int v = 0; v < N; v++)
 		{
 			//get edge weight b/w v and u from adj matrix
@@ -67,12 +78,23 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 		}
 	}
 
+	//TEST print out prevCity array
+	for(int i = 0; i < N; i++)
+	{
+		cout << "i: " << i << " prev i: " << prevCity[i] << endl;
+	}
+
+	prevCity[0] = 75;//JUST FOR TESTING
 
 	//Add vertices to adjacency list
-	for (int i = 1; i < N; i++)//skips first city;
+	for (int i = 0; i < N; i++)
 	{
-		linkedListAddBack(mst[prevCity[i]], i);
-		linkedListAddBack(mst[i], prevCity[i]);
+		//if(prevCity[i] >= 0)
+		if(i != startCity)
+		{
+			linkedListAddBack(mst[prevCity[i]], i);
+			linkedListAddBack(mst[i], prevCity[i]);
+		}
 	}
 
 
@@ -91,7 +113,7 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 //updates key value in min heap
 void updateKey(int city, int newKey, DynArr* heap)
 {
-	int lastIndex = sizeDynArr(heap) - 1;
+	//int lastIndex = sizeDynArr(heap) - 1;
 
 	//find index of node to update
 	int currIndex = 0;
@@ -109,7 +131,7 @@ void updateKey(int city, int newKey, DynArr* heap)
 	putDynArr(heap, currIndex, temp);
 
 	//adjust heap to establish correct sort
-	_adjustHeap(heap, lastIndex, currIndex);
+	percolateUpHeap(heap,currIndex);
 
 }
 
