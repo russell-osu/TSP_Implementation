@@ -24,6 +24,8 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	//create array for tracking previous city
 	int* prevCity = new int[N];
 	prevCity[startCity] = -1; //first city has no previous city
+	//array for rapidly accessing values in min heap for priority update
+	int* lookup = new int[N];
 
 
 	//add cities and key values to arrays (key set to infinity)
@@ -33,15 +35,17 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 		struct Vect temp;
 		temp.cityNum = city;
 		temp.key = 9999999; //infinity 
-		addHeap(vectHeap, temp);
+		addHeap(vectHeap, temp, lookup);
 		key[city] = 9999999;
 		inHeap[city] = 1;
 	}
 
 
+
 	//first city/vector has key value of 0
-	updateKey(startCity, 0, vectHeap);
+	updateKey(startCity, 0, vectHeap, lookup, N);
 	key[startCity] = 0;
+
 
 
 	////TESTING MIN HEAP FUNCTIONALITY
@@ -58,8 +62,10 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	{
 		//get and remove city with lowest key weight from heap
 		struct Vect u = getMinHeap(vectHeap);
-		removeMinHeap(vectHeap); //remove from heap
+		removeMinHeap(vectHeap, lookup); //remove from heap
 		inHeap[u.cityNum] = 0; //remove from in-heap tracking array
+		
+
 
 		//search for vertices adjacent to u in matrix
 		for (int v = 0; v < N; v++)
@@ -73,9 +79,11 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 				prevCity[v] = u.cityNum;
 				key[v] = edgeW;
 				//update key in min heap
-				updateKey(v, edgeW, vectHeap);
+				updateKey(v, edgeW, vectHeap, lookup, N);
 			}
+
 		}
+
 	}
 
 	////TEST print out prevCity array
@@ -83,7 +91,6 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	//{
 	//	cout << "i: " << i << " prev i: " << prevCity[i] << endl;
 	//}
-
 
 	//Add previous vertices to adjacency list
 	int mstWeight = 0;
@@ -93,10 +100,11 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 		{
 			linkedListAddBack(mst[prevCity[i]], i);
 			linkedListAddBack(mst[i], prevCity[i]);
-			mstWeight += matrix[i][prevCity[i]];
+			mstWeight += matrix[i][prevCity[i]];//TESTING
 		}
 	}
 
+	//TESTING
 	cout << "MST weight: " << mstWeight << endl;
 
 	//free all allocated memory
@@ -107,33 +115,51 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	inHeap = nullptr;
 	delete[] prevCity;
 	prevCity = nullptr;
+	delete[] lookup;
+	lookup = nullptr;
 
 }
 
 
 //updates key value in min heap
-void updateKey(int city, int newKey, DynArr* heap)
+void updateKey(int city, int newKey, DynArr* heap, int* lookup, int N)
 {
-	//int lastIndex = sizeDynArr(heap) - 1;
-
+	//TESTING
 	//find index of node to update
-	int currIndex = 0;
-	while (city != heap->data[currIndex].cityNum)
-	{
-		currIndex++;
-	}
+	//int currIndex = 0;
+	//while (city != heap->data[currIndex].cityNum)
+	//{
+	//	currIndex++;
+	//}
+
+	int currIndex = lookup[city];
 
 	//create vect struct to replace old key value
 	struct Vect temp;
 	temp.cityNum = city;
 	temp.key = newKey;
 
+	////TESTING
+	//cout << "Upadted city: " << city << endl;
+	//cout << "heap pos: " << currIndex << endl;
+	//cout << "city key: " << newKey << endl;
+	//cout << "size of heap: " << heap->size << endl;
+
+
 	//update key value at index found in search
 	putDynArr(heap, currIndex, temp);
 
 	//adjust heap to establish correct sort
-	percolateUpHeap(heap,currIndex);
+	percolateUpHeap(heap, currIndex, lookup);
 
+
+	////TESTING
+	//cout << "new heap pos: " << lookup[city] << endl << endl;
+	//for (int i = 0; i<N; i++)
+	//{
+	//	cout << "Lookup city/pos: " << i << " " << lookup[i] << endl;;
+	//}
+	//cout << endl;
 }
 
 
@@ -165,12 +191,12 @@ void findMatching(int **matrix, LinkedList** mst, int* mstDegree, int N)
 
 		int dist = 9999999; //for distance calculation
 
-							//find vertices in Q adj to current vertex
-							//no need to search for all cities in Q
-							//just check a city at front of Q, remove it from 
-							//front of LL and add to back of LL, cycling through all cities in Q; 
-							//when min dist veretex is 
-							//found, just remove from linked list
+		//find vertices in Q adj to current vertex
+		//no need to search for all cities in Q
+		//just check a city at front of Q, remove it from 
+		//front of LL and add to back of LL, cycling through all cities in Q; 
+		//when min dist veretex is 
+		//found, just remove from linked list
 
 		int qSize = linkedListGetSize(oddQ);
 

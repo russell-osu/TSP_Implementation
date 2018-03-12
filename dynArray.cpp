@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "dynArray.hpp"
+#include <iostream>
 //#include "stdio.h"
 
 /* ************************************************************************
@@ -264,7 +265,7 @@ Heap-based Priority Queue Implementation
 
 /* internal function prototypes */
 int _smallerIndexHeap(DynArr *heap, int i, int j);
-void _adjustHeap(DynArr *heap, int max, int pos);
+void _adjustHeap(DynArr *heap, int max, int pos, int* lookup);
 
 /*	Get the index of the smaller node between two nodes in a heap
 
@@ -309,7 +310,7 @@ param: 	node	node to be added to the heap
 pre:	heap is not null
 post:	node is added to the heap
 */
-void addHeap(DynArr *heap, TYPE node)
+void addHeap(DynArr *heap, TYPE node, int* lookup)
 {
 	/* FIXME */					//COMPLETED
 
@@ -319,10 +320,18 @@ void addHeap(DynArr *heap, TYPE node)
 	//add node to end of heap
 	addDynArr(heap, node);
 
+	//create value for storing city's heap pos in lookup array;
+	//city's pos in heap will be stored in the lookup array at the index
+	//of its city num (allows for quick updates
+	//to priority of individual heap elements)
+	int city = node.cityNum;
+
 	//point position to index of newly added element (1 less than size)
 	int nodeIndex = sizeDynArr(heap) - 1;
 	int parentIndex;
 	int swappingFinished = 0; //bool for terminating loop
+	//add city pos to lookup array (at index of city num)
+	lookup[city] = nodeIndex;
 
 	//percolate up until node is in the correct position in the heap
 	while (nodeIndex != 0 && !swappingFinished)
@@ -332,9 +341,15 @@ void addHeap(DynArr *heap, TYPE node)
 		//compare new value with parent's value; if less, swap
 		if (compare(getDynArr(heap, nodeIndex), getDynArr(heap, parentIndex)) == -1)
 		{
+			//update lookup array
+			int parentCity = heap->data[parentIndex].cityNum;
+			lookup[city] = parentIndex;
+			lookup[parentCity] = nodeIndex;
+
 			swapDynArr(heap, nodeIndex, parentIndex);
 			//set new val's index equal to parent's index
 			nodeIndex = parentIndex;
+
 		}
 		else //no more swaps needed
 		{
@@ -346,12 +361,18 @@ void addHeap(DynArr *heap, TYPE node)
 
 //given an updated node's position (priority increased only)
 //moves node up heap until correct position discovered
-void percolateUpHeap(DynArr *heap, int pos)
+void percolateUpHeap(DynArr *heap, int pos, int* lookup)
 {
-	//point position to index of newly added element (1 less than size)
+	//point position to index of element
 	int nodeIndex = pos;
 	int parentIndex;
 	int swappingFinished = 0; //bool for terminating loop
+	//create value for storing city's heap pos in lookup array;
+	//city's pos in heap will be stored in the lookup array at the index
+	//of its city num (allows for quick updates
+	//to priority of individual heap elements)
+	int city = heap->data[pos].cityNum;
+	//lookup[city] = pos;
 
 	//percolate up until node is in the correct position in the heap
 	while (nodeIndex != 0 && !swappingFinished)
@@ -361,9 +382,15 @@ void percolateUpHeap(DynArr *heap, int pos)
 		//compare new value with parent's value; if less, swap
 		if (compare(getDynArr(heap, nodeIndex), getDynArr(heap, parentIndex)) == -1)
 		{
+			//update lookup array
+			int parentCity = heap->data[parentIndex].cityNum;
+			lookup[city] = parentIndex;
+			lookup[parentCity] = nodeIndex;
+
 			swapDynArr(heap, nodeIndex, parentIndex);
 			//set new val's index equal to parent's index
 			nodeIndex = parentIndex;
+
 		}
 		else //no more swaps needed
 		{
@@ -380,7 +407,7 @@ param: 	pos		position index where the adjustment starts
 pre:	none
 post:	heap property is maintained for nodes from index pos to index max
 */
-void _adjustHeap(DynArr *heap, int max, int pos)
+void _adjustHeap(DynArr *heap, int max, int pos, int* lookup)
 {
 	/* FIXME */
 
@@ -388,8 +415,15 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 	int leftChPos = (pos * 2) + 1;
 	int rightChPos = (pos * 2) + 2;
 	TYPE currentVal = getDynArr(heap, pos); //value of current position
+	//create value for storing city's heap pos in lookup array;
+	//city's pos in heap will be stored in the lookup array at the index
+	//of its city num (allows for quick updates
+	//to priority of individual heap elements)
+	int city = heap->data[pos].cityNum;
+	lookup[city] = pos;
 
-											//determine how many children position has
+
+	//determine how many children position has
 	if (rightChPos < max) //if there are two children
 	{
 		//get index and value of smallest child
@@ -398,9 +432,15 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 		//determine if downward swap needed and call adjust heap again
 		if (compare(currentVal, smallestChVal) == 1) //curr val > smallest child
 		{
+			//update lookup array
+			int childCity = heap->data[smallestChPos].cityNum;
+			lookup[city] = smallestChPos;
+			lookup[childCity] = pos;
+
 			//swap values (percolate down) and adjust heap
 			swapDynArr(heap, pos, smallestChPos);
-			_adjustHeap(heap, max, smallestChPos);
+			_adjustHeap(heap, max, smallestChPos, lookup);
+
 		}
 	}
 
@@ -410,9 +450,14 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 		//determine if downward swap needed and call adjust heap again
 		if (compare(currentVal, leftChVal) == 1) //curr val > left child
 		{
+			//update lookup array
+			int childCity = heap->data[leftChPos].cityNum;
+			lookup[city] = leftChPos;
+			lookup[childCity] = pos;
+
 			//swap values (percolate down) and adjust heap
 			swapDynArr(heap, pos, leftChPos);
-			_adjustHeap(heap, max, leftChPos);
+			_adjustHeap(heap, max, leftChPos, lookup);
 		}
 	}
 
@@ -430,11 +475,11 @@ param: 	heap	pointer to the heap
 pre:	heap is not empty
 post:	the first node is removed from the heap
 */
-void removeMinHeap(DynArr *heap)
+void removeMinHeap(DynArr *heap, int* lookup)
 {
 	/* FIXME */				//COMPLETED
 
-							//ensure heap is not empty
+	//ensure heap is not empty
 	assert(sizeDynArr(heap) > 0);
 
 	int lastIndex = sizeDynArr(heap) - 1;
@@ -445,7 +490,7 @@ void removeMinHeap(DynArr *heap)
 	putDynArr(heap, 0, lastElement);
 
 	//adjust heap
-	_adjustHeap(heap, lastIndex, 0);
+	_adjustHeap(heap, lastIndex, 0, lookup);
 
 	//remove last element
 	removeAtDynArr(heap, lastIndex);
@@ -461,7 +506,7 @@ pre:	v is not empty
 post: v is a proper heap
 */
 
-void _buildHeap(DynArr *heap) //POTENTIALLY BUGGY FUNCTION
+void _buildHeap(DynArr *heap, int* lookup) //POTENTIALLY BUGGY FUNCTION
 {
 	/* FIXME */				//COMPLETED
 
@@ -474,7 +519,7 @@ void _buildHeap(DynArr *heap) //POTENTIALLY BUGGY FUNCTION
 	//step back through indices, adjusting each node
 	for (int i = highParentIdx; i >= 0; i--)
 	{
-		_adjustHeap(heap, sizeDynArr(heap), i);
+		_adjustHeap(heap, sizeDynArr(heap), i, lookup);
 	}
 
 
@@ -487,7 +532,7 @@ pre: heap is not empty
 post: the dynArr is in reverse sorted order
 */
 
-void sortHeap(DynArr *heap) //POTENTIALLY BUGGY FUNCTION
+void sortHeap(DynArr *heap, int* lookup) //POTENTIALLY BUGGY FUNCTION
 {
 	/*FIXME*/		//COMPLETED
 
@@ -495,7 +540,7 @@ void sortHeap(DynArr *heap) //POTENTIALLY BUGGY FUNCTION
 	assert(sizeDynArr(heap) > 0);
 
 	//build heap from unsorted array
-	_buildHeap(heap);
+	_buildHeap(heap, lookup);
 
 	//step through heap, swapping last element in heap with
 	//first element (top of heap),
@@ -503,7 +548,7 @@ void sortHeap(DynArr *heap) //POTENTIALLY BUGGY FUNCTION
 	for (int i = maxIndex; i > 0; i--)
 	{
 		swapDynArr(heap, i, 0);
-		_adjustHeap(heap, i, 0);
+		_adjustHeap(heap, i, 0, lookup);
 	}
 
 }

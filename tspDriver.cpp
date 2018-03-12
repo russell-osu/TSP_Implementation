@@ -39,7 +39,7 @@ int main(){
     int N = 0;
 
 	// Testing with hardcoded file name	
-    string fileName = "./tsp_example_1.txt"; // for testing, revise for CL input
+    string fileName = "./tsp_example_3.txt"; // for testing, revise for CL input
     readCityData(fileName, citiesX, citiesY, N);
 
 

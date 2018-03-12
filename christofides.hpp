@@ -8,7 +8,7 @@
 using std::vector;
 
 void primMST(int** matrix, int N, struct LinkedList ** mst);
-void updateKey(int city, int newKey, DynArr* heap);
+void updateKey(int city, int newKey, DynArr* heap, int* lookup, int N);
 void findMatching(int **matrix, LinkedList** mst, int* mstDegree, int N);
 void findEuler(vector<int> &euler, LinkedList** mst);
 void hamTransform(vector<int> &euler, int* ham, int N);

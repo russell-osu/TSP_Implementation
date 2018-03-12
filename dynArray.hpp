@@ -34,9 +34,9 @@ void copyDynArr(DynArr *source, DynArr *destination);
 
 /* Heap-based Priority Queue Interface */
 TYPE getMinHeap(DynArr *heap);
-void addHeap(DynArr *heap, TYPE node);
-void removeMinHeap(DynArr *heap);
-void sortHeap(DynArr *heap);
-void percolateUpHeap(DynArr *heap, int pos);
+void addHeap(DynArr *heap, TYPE node, int* lookup);
+void removeMinHeap(DynArr *heap, int* lookup);
+void sortHeap(DynArr *heap, int* lookup);
+void percolateUpHeap(DynArr *heap, int pos, int* lookup);
 
 #endif
