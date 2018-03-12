@@ -20,7 +20,7 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	//create array for tracking if vertex has been removed from heap
 	int* inHeap = new int[N];
 	//city to serve as root of MST
-	int startCity = 0;
+	int startCity = 10;
 	//create array for tracking previous city
 	int* prevCity = new int[N];
 	prevCity[startCity] = -1; //first city has no previous city
@@ -78,18 +78,16 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 		}
 	}
 
-	//TEST print out prevCity array
-	for(int i = 0; i < N; i++)
-	{
-		cout << "i: " << i << " prev i: " << prevCity[i] << endl;
-	}
+	////TEST print out prevCity array
+	//for(int i = 0; i < N; i++)
+	//{
+	//	cout << "i: " << i << " prev i: " << prevCity[i] << endl;
+	//}
 
-	prevCity[0] = 75;//JUST FOR TESTING
 
-	//Add vertices to adjacency list
+	//Add previous vertices to adjacency list
 	for (int i = 0; i < N; i++)
 	{
-		//if(prevCity[i] >= 0)
 		if(i != startCity)
 		{
 			linkedListAddBack(mst[prevCity[i]], i);
