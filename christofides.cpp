@@ -20,7 +20,7 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	//create array for tracking if vertex has been removed from heap
 	int* inHeap = new int[N];
 	//city to serve as root of MST
-	int startCity = 10;
+	int startCity = 0;
 	//create array for tracking previous city
 	int* prevCity = new int[N];
 	prevCity[startCity] = -1; //first city has no previous city
@@ -86,15 +86,18 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 
 
 	//Add previous vertices to adjacency list
+	int mstWeight = 0;
 	for (int i = 0; i < N; i++)
 	{
 		if(i != startCity)
 		{
 			linkedListAddBack(mst[prevCity[i]], i);
 			linkedListAddBack(mst[i], prevCity[i]);
+			mstWeight += matrix[i][prevCity[i]];
 		}
 	}
 
+	cout << "MST weight: " << mstWeight << endl;
 
 	//free all allocated memory
 	deleteDynArr(vectHeap);
