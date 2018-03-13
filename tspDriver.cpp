@@ -33,13 +33,17 @@ using std::vector;
 
 
 int main(){
+	//set seed for RNG
+	unsigned seed = time(nullptr);
+	srand(seed);
 
+	//create arrays for holding city coordinates
     int citiesX[16000];
     int citiesY[16000];
     int N = 0;
 
 	// Testing with hardcoded file name	
-    string fileName = "./tsp_example_3.txt"; // for testing, revise for CL input
+    string fileName = "./tsp_example_1.txt"; // for testing, revise for CL input
     readCityData(fileName, citiesX, citiesY, N);
 
 
@@ -56,99 +60,153 @@ int main(){
 	//create array for holding Degree of each vertex in mst
 	int* mstDegree = new int[N];
 
-	//create vector for holder euler tour
-	vector<int> euler;
 
-	//create array for holding hamiltonian tour
-	int* ham = new int[N+1];
+	//create array for holding numTours hamiltonian tours
+	//each tour is based off of an MST with diff starting vertices
+	int numTours = 5;
+	int** ham = new int*[numTours];
 
-	//create dynamic array of pointers to linked lists for adjacency list (mst)
-	struct LinkedList** mst = new LinkedList*[N];
-	for (int row = 0; row < N; row++)
+	for (int i = 0; i < numTours; i++)
 	{
-		//each row represents a vertex and its adjacencies
-		mst[row] = linkedListCreate();
+		ham[i] = new int[N + 1];
 	}
 
 
-	//create MST
-	primMST(matrix, N, mst);
 
-	//TEST: print adjacency list
-	for (int i = 0; i < N; i++)
+
+
+	//generate numTour hamiltonian tours, apply 1x psuedo-2opt
+	//(each tour is based off of an MST with diff starting vertex)
+	//and take the shortest for further optimization
+	
+	int bestTour = 0;
+	int bestTourLength = 9999999999999; //infinity
+	for (int tour = 0; tour < numTours; tour++)
 	{
-		cout << i << " -> ";
-		linkedListPrint(mst[i]);
-		cout << endl;
+
+		//create dynamic array of pointers to linked lists for adjacency list (mst)
+		struct LinkedList** mst = new LinkedList*[N];
+		for (int row = 0; row < N; row++)
+		{
+			//each row represents a vertex and its adjacencies
+			mst[row] = linkedListCreate();
+		}
+
+		//create vector for holder euler tour
+		vector<int> euler;
+
+		//gen random starting city
+		int firstVert = rand() % (N - 0 + 1) + 0;
+		//cout << "First Vert: " << firstVert << endl << endl;
+
+		//create MST
+		primMST(matrix, N, mst, firstVert);
+
+		////TEST: print adjacency list
+		//for (int i = 0; i < N; i++)
+		//{
+		//	cout << i << " -> ";
+		//	linkedListPrint(mst[i]);
+		//	cout << endl;
+		//}
+
+		//find degree of each vertex in MST
+		for (int row = 0; row < N; row++)
+		{
+			//each row represents a vertex and its adjacencies
+			mstDegree[row] = linkedListGetSize(mst[row]);
+			//cout << "City: " << row << " Degree: " << mstDegree[row] << endl;//TEST
+		}
+
+		//Find min-weight perfect matching and add to mst
+		findMatching(matrix, mst, mstDegree, N);
+
+		////TEST: print updated adjacency list (union of mst
+		////and perfect matching
+		//for (int i = 0; i < N; i++)
+		//{
+		//	cout << i << " -> ";
+		//	linkedListPrint(mst[i]);
+		//	cout << endl;
+		//}
+
+		//create Eulier circuit tour of modified mst
+		findEuler(euler, mst);
+
+		////TEST: print euler tour
+		//int vectSize = euler.size();
+		//cout << "Euler tour: ";
+		//for (int i = 0; i < vectSize; i++)
+		//{
+		//	cout << euler[i] << " ";
+		//}
+
+		//transform euler circuit into ham cycle
+		hamTransform(euler, ham[tour], N);
+
+		////TEST: print ham tour
+		//cout << endl;
+		//cout << "Ham tour: ";
+		//for (int i = 0; i <= N; i++)
+		//{
+		//	cout << ham[i] << " ";
+		//}
+
+
+		//run two-opt on ham tour
+		for (int i = 0; i < 1; i++)
+		{
+			pseudoTwoOpt(ham[tour], matrix, N);
+		}
+
+		//calculate tour length
+		int tourLength = 0;
+		for (int i = 0; i < N; i++) {
+			tourLength += matrix[ham[tour][i]][ham[tour][i + 1]];
+		}
+
+		//determine best tour
+		if(tourLength < bestTourLength)
+		{
+			bestTourLength = tourLength;
+			bestTour = tour;
+		}
+
+		//delete allocated memory in mst
+		for (int row = 0; row < N; row++)
+		{
+			linkedListDestroy(mst[row]);
+		}
+		delete[] mst;
+		mst = nullptr;
+
+		cout << endl << endl;
+
 	}
 
-	//find degree of each vertex in MST
-	for (int row = 0; row < N; row++)
-	{
-		//each row represents a vertex and its adjacencies
-		mstDegree[row] = linkedListGetSize(mst[row]);
-		cout << "City: " << row << " Degree: " << mstDegree[row] << endl;//TEST
-	}
 
-	//Find min-weight perfect matching and add to mst
-	findMatching(matrix, mst, mstDegree, N);
-
-	//TEST: print updated adjacency list (union of mst
-	//and perfect matching
-	for (int i = 0; i < N; i++)
-	{
-		cout << i << " -> ";
-		linkedListPrint(mst[i]);
-		cout << endl;
-	}
-
-	//create Eulier circuit tour of modified mst
-	findEuler(euler, mst);
-
-	//TEST: print euler tour
-	int vectSize = euler.size();
-	cout << "Euler tour: ";
-	for (int i = 0; i < vectSize; i++)
-	{
-		cout << euler[i] << " ";
-	}
-
-	//transform euler circuit into ham cycle
-	hamTransform(euler, ham, N);
-
-	//TEST: print ham tour
-	cout << endl;
-	cout << "Ham tour: ";
-	for (int i = 0; i <= N; i++)
-	{
-		cout << ham[i] << " ";
-	}
-
-
-	//run two-opt on ham tour
-	for(int i = 0; i < 3; i++)
-	{
-		pseudoTwoOpt(ham, matrix, N);
-	}
-
-	//TEST: print tour length
+	//output best tour length
 	int tourLength = 0;
 	for (int i = 0; i < N; i++) {
-		tourLength += matrix[ham[i]][ham[i + 1]];
+		tourLength += matrix[ham[bestTour][i]][ham[bestTour][i + 1]];
 	}
-	cout << endl << endl << "Tour Length = " << tourLength << endl << endl;
+	cout << endl << endl << "Best Tour Length = " << tourLength << endl << endl;//TEST
 
 
 	//deallocate memory from matrix and arrays
+	for (int i = 0; i < numTours; i++)
+	{
+		delete[] ham[i];
+	}
+	delete[] ham;
+	ham = nullptr;
+
 	for (int row = 0; row < N; row ++)
 	{
 		delete[] matrix[row];
-		linkedListDestroy(mst[row]);
 	}
 	delete[] matrix;
 	matrix = nullptr;
-	delete[] mst;
-	mst = nullptr;
 	delete[] mstDegree;
 	mstDegree = nullptr;
 	delete[] ham;

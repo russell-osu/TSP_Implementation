@@ -11,7 +11,7 @@ using std::string;
 using std::vector;
 
 // build a minimum spanning tree from graph represented by matrix
-void primMST(int** matrix, int N, struct LinkedList ** mst)
+void primMST(int** matrix, int N, struct LinkedList ** mst, int firstVert)
 {
 	//create min heap with city numbers and key 
 	DynArr* vectHeap = newDynArr(N);
@@ -20,7 +20,7 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	//create array for tracking if vertex has been removed from heap
 	int* inHeap = new int[N];
 	//city to serve as root of MST
-	int startCity = 0;
+	int startCity = firstVert;
 	//create array for tracking previous city
 	int* prevCity = new int[N];
 	prevCity[startCity] = -1; //first city has no previous city
@@ -45,7 +45,6 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 	//first city/vector has key value of 0
 	updateKey(startCity, 0, vectHeap, lookup, N);
 	key[startCity] = 0;
-
 
 
 	////TESTING MIN HEAP FUNCTIONALITY
@@ -104,8 +103,8 @@ void primMST(int** matrix, int N, struct LinkedList ** mst)
 		}
 	}
 
-	//TESTING
-	cout << "MST weight: " << mstWeight << endl;
+	////TESTING
+	//cout << "MST weight: " << mstWeight << endl;
 
 	//free all allocated memory
 	deleteDynArr(vectHeap);
@@ -270,6 +269,7 @@ void findEuler(vector<int> &euler, LinkedList** mst)
 	} while (!linkedListIsEmpty(vStack));
 
 
+
 	//delete stack
 	linkedListDestroy(vStack);
 }
@@ -315,6 +315,7 @@ void hamTransform(vector<int> &euler, int* ham, int N)
 
 	//add starting vertex to end of ham tour
 	ham[N] = ham[0];
+
 
 	//free allocated memory
 	delete[] hamVisited;
