@@ -47,5 +47,9 @@ void writeTourWithCoords(string fileName, int* tour, int N,
 // -------------------------------------------------------------------
 int cityDist(int** matrix, int row, int col);
 
+// -------------------------------------------------------------------
+// --- Function writeTourData
+// -------------------------------------------------------------------
+void writeTourData(string fileName, int tourLength, int* tour, int N);
 
 #endif

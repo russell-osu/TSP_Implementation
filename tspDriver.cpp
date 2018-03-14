@@ -32,7 +32,7 @@ using std::vector;
 
 
 
-int main(){
+int main(int argc, char** argv){
 	//set seed for RNG
 	unsigned seed = time(nullptr);
 	srand(seed);
@@ -40,10 +40,11 @@ int main(){
 	//create arrays for holding city coordinates
     int citiesX[16000];
     int citiesY[16000];
-    int N = 0;
+    int N = 0; //number of cities
 
-	// Testing with hardcoded file name	
-    string fileName = "./tsp_example_1.txt"; // for testing, revise for CL input
+
+	// Get filename from command line and read data from file	
+	string fileName = argv[1];
     readCityData(fileName, citiesX, citiesY, N);
 
 
@@ -71,10 +72,6 @@ int main(){
 		ham[i] = new int[N + 1];
 	}
 
-
-
-
-
 	//generate numTour hamiltonian tours, apply 1x psuedo-2opt
 	//(each tour is based off of an MST with diff starting vertex)
 	//and take the shortest for further optimization
@@ -97,7 +94,7 @@ int main(){
 
 		//gen random starting city
 		int firstVert = rand() % (N - 0 + 1) + 0;
-		//cout << "First Vert: " << firstVert << endl << endl;
+		//cout << "First Vert: " << firstVert << endl << endl;//TEST
 
 		//create MST
 		primMST(matrix, N, mst, firstVert);
@@ -182,15 +179,22 @@ int main(){
 
 		cout << endl << endl;
 
-	}
+	} //end MST testing loop
 
 
-	//output best tour length
+	//calculate best tour length
 	int tourLength = 0;
 	for (int i = 0; i < N; i++) {
 		tourLength += matrix[ham[bestTour][i]][ham[bestTour][i + 1]];
 	}
-	cout << endl << endl << "Best Tour Length = " << tourLength << endl << endl;//TEST
+	//cout << endl << endl << "Best Tour Length = " << tourLength << endl << endl;//TEST
+
+
+	//write data to output file
+	string outputFile = argv[1];
+	outputFile.append(".tour");
+	writeTourData(outputFile, tourLength, ham[bestTour], N);
+
 
 
 	//deallocate memory from matrix and arrays
@@ -216,64 +220,5 @@ int main(){
 }
 
 
-
-
-
-///*--------------Functions Begin Here---------------*/
-//
-//
-//// --- Reads Data from a file formatted for the TSP Project ----
-//void readCityData(string fileName, int* citiesX, int* citiesY, int &N){
-//
-//    int ID;
-//
-//    std::ifstream inFile;
-//    inFile.open(fileName.c_str());
-//
-//    if(inFile.fail()){
-//	cout << endl << "File could not be opened for reading.\n";
-//	cout << endl;
-//    }
-//    else{
-//	while(inFile >> ID){
-//	    inFile >> citiesX[ID];
-//	    inFile >> citiesY[ID];
-//	}
-//	N = ID + 1;
-//    }
-//    inFile.close();
-//
-//    return;
-//
-//}
-//
-//
-////generates adjacency matrix with city coordinate data 
-//void genAdjMatrix(int ** matrix, int N, int* citiesX, int* citiesY)
-//{
-//	int colStart = 0;
-//
-//	//calculate distance from a given city (row index) to every other city (col index)
-//	for(int row = 0; row < N; row++)
-//	{
-//		
-//		for(int col = colStart; col < N; col++)
-//		{
-//			//calculate distance between cities (row index and col index)
-//			double distance = sqrt(pow((citiesX[row] - citiesX[col]), 2) +
-//			pow((citiesY[row] - citiesY[col]), 2));
-//
-//			//insert distance in both cells in matrix that correspond to edge
-//			matrix[row][col] = static_cast<int>(round(distance));
-//			matrix[col][row] = static_cast<int>(round(distance));
-//			 
-//		}
-//
-//		//can start 1 col later because prev col has already been filled in
-//		colStart++;
-//
-//	}
-//
-//}
 
 

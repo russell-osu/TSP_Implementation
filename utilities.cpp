@@ -135,3 +135,25 @@ void writeTourWithCoords(string fileName, int* tour, int N, int tourLength, int*
 	outFile.close();
 	return;
 }
+
+// -------------------------------------------------------------------
+// --- Function writeTourData
+// -------------------------------------------------------------------
+void writeTourData(string fileName, int tourLength, int* tour, int N)
+{
+	//open output file and read in data
+	std::ofstream outFile;
+	outFile.open(fileName);
+
+	//write tour length to file
+	outFile << tourLength << endl;
+
+	//write city tour to file
+	for(int i = 1; i < N; i++)
+	{
+		outFile << tour[i] << endl;
+	}
+
+	outFile.close();
+
+}
