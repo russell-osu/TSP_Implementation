@@ -38,8 +38,7 @@ void genAdjMatrix(int ** matrix, int N, int* citiesX, int* citiesY);
 // --- First line written is the tour Length, followed by the city ID's
 // --- and their coordinates. In the order of the tour
 // --------------------------------------------------------------------
-void writeTourWithCoords(string fileName, int* tour, int N,
-	int tourLength, int* citiesX, int* citiesY);
+void writeTourWithCoords(string fileName, int* tour, int N, int tourLength, int* citiesX, int* citiesY);
 
 
 // -------------------------------------------------------------------
@@ -47,9 +46,6 @@ void writeTourWithCoords(string fileName, int* tour, int N,
 // -------------------------------------------------------------------
 int cityDist(int** matrix, int row, int col);
 
-// -------------------------------------------------------------------
-// --- Function writeTourData
-// -------------------------------------------------------------------
-void writeTourData(string fileName, int tourLength, int* tour, int N);
 
 #endif
+

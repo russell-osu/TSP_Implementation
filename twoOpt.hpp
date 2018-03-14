@@ -26,7 +26,7 @@ int pseudoTwoOpt(int* tour, int** matrix, int N);
 
 // --------------------------------------------------------------------
 // --- Function swapEdges
-// --- Takes in tour data, indexes of the tour 
+// --- Takes in tour data, indexes of the tour
 // --- Returns the tour with a two-Opt swap completed at those indexes
 // --------------------------------------------------------------------
 void swapEdges(int* tour, int x, int y);
@@ -49,3 +49,4 @@ int edgeLength(int* tour, int j, int k, int** matrix);
 
 
 #endif
+
