@@ -1,0 +1,1 @@
+g++ -std=c++11 christofides.cpp christofides.hpp dynArray.cpp dynArray.hpp linkedList.cpp linkedList.hpp tspDriver.cpp twoOpt.cpp twoOpt.hpp type.hpp utilities.cpp utilities.hpp threeOpt.hpp threeOpt.cpp -o tsp
