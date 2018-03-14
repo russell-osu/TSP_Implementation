@@ -17,6 +17,7 @@
 #include "christofides.hpp"
 #include "twoOpt.hpp"
 #include "utilities.hpp"
+#include "threeOpt.hpp"
 
 
 using std::cout;
@@ -33,6 +34,15 @@ using std::vector;
 
 
 int main(int argc, char** argv){
+
+	//command line arg error check
+	if (argc != 2)
+	{
+		cout << "Please enter file name for processing." << endl;
+		return 1;
+	}
+
+
 	//set seed for RNG
 	unsigned seed = time(nullptr);
 	srand(seed);
@@ -77,7 +87,7 @@ int main(int argc, char** argv){
 	//and take the shortest for further optimization
 	
 	int bestTour = 0;
-	int bestTourLength = 9999999999999; //infinity
+	int bestTourLength = 999999999; //infinity
 	for (int tour = 0; tour < numTours; tour++)
 	{
 
@@ -150,7 +160,7 @@ int main(int argc, char** argv){
 		//}
 
 
-		//run two-opt on ham tour
+		//run pseudo two-opt on ham tour
 		for (int i = 0; i < 1; i++)
 		{
 			pseudoTwoOpt(ham[tour], matrix, N);
@@ -182,12 +192,22 @@ int main(int argc, char** argv){
 	} //end MST testing loop
 
 
+	cout << "Start second round of k-opt" << endl << endl;
+
+
+	//run k-opt on best ham tour
+	for (int i = 0; i < 1; i++)
+	{
+		threeOpt(ham[bestTour], matrix, N);
+	}
+
+
 	//calculate best tour length
 	int tourLength = 0;
 	for (int i = 0; i < N; i++) {
 		tourLength += matrix[ham[bestTour][i]][ham[bestTour][i + 1]];
 	}
-	//cout << endl << endl << "Best Tour Length = " << tourLength << endl << endl;//TEST
+	cout << endl << endl << "Best Tour Length = " << tourLength << endl << endl;//TEST
 
 
 	//write data to output file

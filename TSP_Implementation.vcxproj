@@ -119,6 +119,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="christofides.cpp" />
+    <ClCompile Include="threeOpt.cpp" />
     <ClCompile Include="tspDriver.cpp" />
     <ClCompile Include="dynArray.cpp" />
     <ClCompile Include="linkedList.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="christofides.hpp" />
     <ClInclude Include="dynArray.hpp" />
     <ClInclude Include="linkedList.hpp" />
+    <ClInclude Include="threeOpt.hpp" />
     <ClInclude Include="twoOpt.hpp" />
     <ClInclude Include="type.hpp" />
     <ClInclude Include="utilities.hpp" />

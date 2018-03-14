@@ -5,6 +5,7 @@
 #include "utilities.hpp"
 #include "twoOpt.hpp"
 
+#include "utilities.hpp"
 
 #include <string>
 #include <cstdlib>
@@ -144,7 +145,7 @@ void swapEdges(int* tour, int x, int y) {
 	for (int k = 0; k < y - x; k++) {
 		tour[k + x] = midPath[k];
 	}
-
+	//cout << endl << "Edges Swapped" << endl;
 	return;
 }
 
@@ -165,3 +166,21 @@ int pathDiff(int* tour, int j, int k, int** matrix) {
 
 	return (oldEdge1 + oldEdge2) - (newEdge1 + newEdge2);
 }
+
+/*
+// -------------------------------------------------------------------
+// --- Function edgeLength
+// --- Takes in tour data, indexes of the tour, and city coordinates,
+// --- Returns distances between the cities
+// --------------------------------------------------------------------
+int edgeLength(int* tour, int j, int k, int** matrix){
+
+int sqEdge;
+
+// Calculate the squares of the edges
+sqEdge = pow((citiesX[tour[j]] - citiesX[tour[k]]), 2) +
+pow((citiesY[tour[j]] - citiesY[tour[k]]), 2);
+
+return round(sqrt(sqEdge));
+}
+*/
