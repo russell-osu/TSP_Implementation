@@ -140,24 +140,24 @@ int main(int argc, char** argv){
 		//create Eulier circuit tour of modified mst
 		findEuler(euler, mst);
 
-		////TEST: print euler tour
-		//int vectSize = euler.size();
-		//cout << "Euler tour: ";
-		//for (int i = 0; i < vectSize; i++)
-		//{
-		//	cout << euler[i] << " ";
-		//}
+		//TEST: print euler tour
+		int vectSize = euler.size();
+		cout << "Euler tour: ";
+		for (int i = 0; i < vectSize; i++)
+		{
+			cout << euler[i] << " ";
+		}
 
 		//transform euler circuit into ham cycle
 		hamTransform(euler, ham[tour], N);
 
-		////TEST: print ham tour
-		//cout << endl;
-		//cout << "Ham tour: ";
-		//for (int i = 0; i <= N; i++)
-		//{
-		//	cout << ham[i] << " ";
-		//}
+		//TEST: print ham tour
+		cout << endl;
+		cout << "Ham tour: ";
+		for (int i = 0; i <= N; i++)
+		{
+			cout << ham[tour][i] << " ";
+		}
 
 
 		//run pseudo two-opt on ham tour
@@ -198,7 +198,7 @@ int main(int argc, char** argv){
 	//run k-opt on best ham tour
 	for (int i = 0; i < 1; i++)
 	{
-		threeOpt(ham[bestTour], matrix, N);
+		pseudoTwoOpt(ham[bestTour], matrix, N);
 	}
 
 

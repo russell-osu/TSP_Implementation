@@ -149,7 +149,7 @@ void writeTourData(string fileName, int tourLength, int* tour, int N)
 	outFile << tourLength << endl;
 
 	//write city tour to file
-	for(int i = 1; i < N; i++)
+	for(int i = 0; i < N; i++)
 	{
 		outFile << tour[i] << endl;
 	}
