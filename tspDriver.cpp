@@ -104,7 +104,8 @@ int main(int argc, char** argv){
 			vector<int> euler;
 
 			//gen random starting city
-			int firstVert = rand() % (N - 0 + 1) + 0;
+			int firstVert = rand() % N;
+			cout << endl << "firstVert = " << firstVert << endl << endl;
 			//cout << "First Vert: " << firstVert << endl << endl;//TEST
 
 			//create MST
@@ -202,11 +203,13 @@ int main(int argc, char** argv){
 			pseudoTwoOpt(ham[bestTour], matrix, N);
 			threeOpt(ham[bestTour], matrix, N);
 			pseudoTwoOpt(ham[bestTour], matrix, N);
+                        threeOpt(ham[bestTour], matrix, N);
 			pseudoTwoOpt(ham[bestTour], matrix, N);
-			
+
 			pseudoTwoOpt(ham[bestTour], matrix, N);
 			threeOpt(ham[bestTour], matrix, N);
 			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
 			pseudoTwoOpt(ham[bestTour], matrix, N);
 		}
 		else if(N < 2001){

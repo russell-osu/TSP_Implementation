@@ -41,7 +41,7 @@ int threeOpt(int* tour, int** matrix, int N){
     for (int i = 0; i < N; i++){
         tourLength += matrix[tour[i]][tour[i+1]];
     }
-    cout << endl;
+    cout << endl << "3-Opt has started. Please be patient." << endl << endl;
 
     // starting with the first edge, iterate through all of the existing edges
     for(x = 1; x < (N-4); x++){
@@ -50,15 +50,15 @@ int threeOpt(int* tour, int** matrix, int N){
         y = x + 1;
 
         //compare this edge with all other edges following it (except next one)
-        while(!changeMade && (y<x+40) && (y < (N-3))) {
+        while(!changeMade  && (y < (N-3))) {
             y++;
 
             z = y + 1;
-            while(!changeMade & (z<y+40) && (z < N-1) && !((z ==(N-1) && x == 1))) {
+            while(!changeMade  && (z < N-1) && !((z ==(N-1) && x == 1))) {
                             // Also, Do not compare first and last edge of tour
                 z++;
 // TESTING
- cout << endl << "x = " << x << ", Current Tour Length = " << tourLength;
+// cout << endl << "x = " << x << ", Current Tour Length = " << tourLength;
 
                 // find best option of all possible swaps at x, y & z
                 option = findMinOpt(tour, x, y, z, matrix, reduction);
