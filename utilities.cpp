@@ -24,7 +24,7 @@ using std::string;
 // --------------------------------------------------------------------
 void readCityData(string fileName, int* citiesX, int* citiesY, int &N) {
 
-	int ID;
+	int ID; 
 
 	std::ifstream inFile;
 	inFile.open(fileName.c_str());
