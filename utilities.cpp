@@ -39,8 +39,9 @@ void readCityData(string fileName, int* citiesX, int* citiesY, int &N) {
 			inFile >> citiesY[ID];
 		}
 		N = ID + 1;
+		inFile.close();
 	}
-	inFile.close();
+	//inFile.close();
 
 	return;
 }

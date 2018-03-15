@@ -236,7 +236,7 @@ int main(int argc, char** argv){
 		mstDegree = nullptr;
 		delete[] ham;
 		ham = nullptr;
-	}
+	} //end if (checks for valid file name)
     return 0;
 }
 
