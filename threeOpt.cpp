@@ -50,11 +50,11 @@ int threeOpt(int* tour, int** matrix, int N){
         y = x + 1;
 
         //compare this edge with all other edges following it (except next one)
-        while(!changeMade && (y < (N-3))) {
+        while(!changeMade && (y<x+40) && (y < (N-3))) {
             y++;
 
             z = y + 1;
-            while(!changeMade && (z < N-1) && !((z ==(N-1) && x == 1))) {
+            while(!changeMade & (z<y+40) && (z < N-1) && !((z ==(N-1) && x == 1))) {
                             // Also, Do not compare first and last edge of tour
                 z++;
 // TESTING

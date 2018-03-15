@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-//	CS 325 - Group Project - Traveling Salesman Problem
+//	CS 325 - Group 27 Project - Traveling Salesman Problem
 //	
 //	
 //	
@@ -75,7 +75,7 @@ int main(int argc, char** argv){
 
 		//create array for holding numTours hamiltonian tours
 		//each tour is based off of an MST with diff starting vertices
-		int numTours = 5;
+		int numTours = 10;
 		int** ham = new int*[numTours];
 
 		for (int i = 0; i < numTours; i++)
@@ -194,14 +194,31 @@ int main(int argc, char** argv){
 
 
 		cout << "Start second round of k-opt" << endl << endl;
-
+		
+		pseudoTwoOpt(ham[bestTour], matrix, N);
 
 		//run k-opt on best ham tour
-		for (int i = 0; i < 1; i++)
-		{
+		if(N < 1001){
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
 			pseudoTwoOpt(ham[bestTour], matrix, N);
 		}
-
+		else if(N < 2001){
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+		}
+		else if(N < 5001){
+			twoOpt(ham[bestTour], matrix, N);
+		}
+		
 
 		//calculate best tour length
 		int tourLength = 0;
