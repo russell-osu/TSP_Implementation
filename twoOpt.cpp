@@ -116,9 +116,9 @@ int pseudoTwoOpt(int* tour, int** matrix, int N) {
 
 		}  // end of while loop
 
-		   // TESTING ---  print intermediate tour lengths ---------
-		cout << endl;
-		cout << "Current Tour Length (Pseudo) = " << tourLength;
+		//// TESTING ---  print intermediate tour lengths ---------
+		//cout << endl;
+		//cout << "Current Tour Length (Pseudo) = " << tourLength;
 		// ------------------------------------------------------
 
 	}  // end of for loop

@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-//	CS 325 - Group Project - Traveling Salesman Problem
+//	CS 325 - Group 27 Project - Traveling Salesman Problem
 //	
 //	
 //	
@@ -33,7 +33,7 @@ using std::vector;
 
 
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 
 	//command line arg error check
 	if (argc != 2)
@@ -48,14 +48,14 @@ int main(int argc, char** argv){
 	srand(seed);
 
 	//create arrays for holding city coordinates
-    int citiesX[16000];
-    int citiesY[16000];
-    int N = 0; //number of cities
+	int citiesX[16000];
+	int citiesY[16000];
+	int N = 0; //number of cities
 
 
 	// Get filename from command line and read data from file	
 	string fileName = argv[1];
-    readCityData(fileName, citiesX, citiesY, N);
+	readCityData(fileName, citiesX, citiesY, N);
 
 	if (N > 0) //ensure that file exists
 	{
@@ -75,7 +75,7 @@ int main(int argc, char** argv){
 
 		//create array for holding numTours hamiltonian tours
 		//each tour is based off of an MST with diff starting vertices
-		int numTours = 5;
+		int numTours = 10;
 		int** ham = new int*[numTours];
 
 		for (int i = 0; i < numTours; i++)
@@ -104,7 +104,8 @@ int main(int argc, char** argv){
 			vector<int> euler;
 
 			//gen random starting city
-			int firstVert = rand() % (N - 0 + 1) + 0;
+			int firstVert = rand() % N; // 0 <= firstVert < N
+			cout << endl << "firstVert = " << firstVert << endl << endl;
 			//cout << "First Vert: " << firstVert << endl << endl;//TEST
 
 			//create MST
@@ -141,24 +142,24 @@ int main(int argc, char** argv){
 			//create Eulier circuit tour of modified mst
 			findEuler(euler, mst);
 
-			//TEST: print euler tour
-			int vectSize = euler.size();
-			cout << "Euler tour: ";
-			for (int i = 0; i < vectSize; i++)
-			{
-				cout << euler[i] << " ";
-			}
+			////TEST: print euler tour
+			//int vectSize = euler.size();
+			//cout << "Euler tour: ";
+			//for (int i = 0; i < vectSize; i++)
+			//{
+			//	cout << euler[i] << " ";
+			//}
 
 			//transform euler circuit into ham cycle
 			hamTransform(euler, ham[tour], N);
 
-			//TEST: print ham tour
-			cout << endl;
-			cout << "Ham tour: ";
-			for (int i = 0; i <= N; i++)
-			{
-				cout << ham[tour][i] << " ";
-			}
+			////TEST: print ham tour
+			//cout << endl;
+			//cout << "Ham tour: ";
+			//for (int i = 0; i <= N; i++)
+			//{
+			//	cout << ham[tour][i] << " ";
+			//}
 
 
 			//run pseudo two-opt on ham tour
@@ -195,11 +196,34 @@ int main(int argc, char** argv){
 
 		cout << "Start second round of k-opt" << endl << endl;
 
-
-		//run k-opt on best ham tour
-		for (int i = 0; i < 1; i++)
+		//run p-2opt a few times
+		for (int i = 0; i < 2; i++)
 		{
 			pseudoTwoOpt(ham[bestTour], matrix, N);
+		}
+
+		//run k-opt on best ham tour (contingent on N)
+		if (N < 1001) {
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+		}
+		else if (N < 2001) {
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			threeOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+			pseudoTwoOpt(ham[bestTour], matrix, N);
+		}
+		else if (N < 5001) {
+			twoOpt(ham[bestTour], matrix, N);
 		}
 
 
@@ -237,7 +261,7 @@ int main(int argc, char** argv){
 		delete[] ham;
 		ham = nullptr;
 	} //end if (checks for valid file name)
-    return 0;
+	return 0;
 }
 
 
